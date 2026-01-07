@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>AI Lead Finder</title>
+</head>
+
+<body>
+
+  <h2>Enter Lead</h2>
+
+  <input id="lead" placeholder="Company or Person Name">
+  <button onclick="fetchLead()">Fetch Info</button>
+
+  <h3>Lead Details</h3>
+  <pre id="result"></pre>
+
+  <script>
+    async function fetchLead() {
+      const lead = document.getElementById("lead").value;
+
+      const response = await fetch("/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lead })
+      });
+
+      const data = await response.json();
+      document.getElementById("result").innerText = data.info;
+    }
+  </script>
+
+</body>
+
+</html>
