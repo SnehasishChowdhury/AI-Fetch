@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>AI Lead Finder</title>
 </head>
@@ -16,20 +15,43 @@
   <pre id="result"></pre>
 
   <script>
-    async function fetchLead() {
-      const lead = document.getElementById("lead").value;
+    async function fetchLead(fromURL = false) {
+      const leadInput = document.getElementById("lead");
+      const lead = leadInput.value.trim();
 
-      const response = await fetch("/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lead })
-      });
+      if (!lead) return;
 
-      const data = await response.json();
-      document.getElementById("result").innerText = data.info;
+      // ✅ Update URL only when user clicks
+      if (!fromURL) {
+        const params = new URLSearchParams({ lead });
+        window.history.pushState({}, "", "?" + params.toString());
+      }
+
+      document.getElementById("result").innerText = "Fetching info...";
+
+      try {
+        const response = await fetch("/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lead })
+        });
+
+        const data = await response.json();
+        document.getElementById("result").innerText = data.info;
+      } catch (err) {
+        document.getElementById("result").innerText = "Error fetching data.";
+      }
     }
+
+    // ✅ Auto-fetch if URL contains ?lead=
+    window.onload = () => {
+      const leadFromURL = new URLSearchParams(window.location.search).get("lead");
+      if (leadFromURL) {
+        document.getElementById("lead").value = leadFromURL;
+        fetchLead(true);
+      }
+    };
   </script>
 
 </body>
-
 </html>
