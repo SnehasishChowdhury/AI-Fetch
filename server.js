@@ -8,9 +8,10 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
-const NEWSAPI_KEY = process.env.NEWSAPI_KEY;
+// ⚠️ HARDCODED API KEY (NOT RECOMMENDED FOR PROD)
+const NEWSAPI_KEY = "8edbc84b5fb94fa8b4e47ea44fc295c1";
 
-// ✅ ROOT ROUTE (THIS FIXES "Cannot GET /")
+// ROOT ROUTE
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -51,6 +52,4 @@ app.post("/lead", async (req, res) => {
   }
 });
 
-// ❌ REMOVE app.listen()
-// ✅ EXPORT app for Vercel
 module.exports = app;
