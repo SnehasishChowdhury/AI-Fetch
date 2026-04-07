@@ -21,7 +21,6 @@
 
       if (!lead) return;
 
-      // ✅ Update URL only when user clicks
       if (!fromURL) {
         const params = new URLSearchParams({ lead });
         window.history.pushState({}, "", "?" + params.toString());
@@ -30,20 +29,22 @@
       document.getElementById("result").innerText = "Fetching info...";
 
       try {
-        const response = await fetch("/lead", {
+        const response = await fetch("https://ai-fetch.vercel.app/lead", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({ lead })
         });
 
         const data = await response.json();
         document.getElementById("result").innerText = data.info;
+
       } catch (err) {
-        document.getElementById("result").innerText = "Error fetching data.";
+        document.getElementById("result").innerText = "❌ Error fetching insights";
       }
     }
 
-    // ✅ Auto-fetch if URL contains ?lead=
     window.onload = () => {
       const leadFromURL = new URLSearchParams(window.location.search).get("lead");
       if (leadFromURL) {
